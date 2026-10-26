@@ -9,9 +9,12 @@ from pathlib import Path
 import streamlit as st
 from dotenv import load_dotenv
 
+from src.etiku_ai.auth import sign_out
+from src.etiku_ai.auth_ui import render_auth
+
 from src.etiku_ai.assistant import stream_response
 from src.etiku_ai.settings import render_settings
-from src.etiku_ai.session_storage import (
+from src.etiku_ai.supabase_storage import (
     add_message,
     create_conversation,
     delete_conversation,
@@ -44,6 +47,10 @@ if css_file.exists():
         unsafe_allow_html=True,
     )
 
+# Require login before accessing conversations
+user = render_auth()
+
+# Initialize authenticated database storage
 initialize()
 
 if "conversation_id" not in st.session_state:
@@ -270,6 +277,13 @@ with st.sidebar:
         "Conversations are temporary and isolated by session."
     )
 
+    st.caption(f"Signed in as: {user.email}")
+
+    if st.button("Sign out", use_container_width=True):
+        sign_out()
+        st.rerun()
+
+    st.divider()
 
 # --------------------------------------------------
 # MAIN CHAT INTERFACE

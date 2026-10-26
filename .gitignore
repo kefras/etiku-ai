@@ -1,4 +1,3 @@
-
 # Python cache
 __pycache__/
 *.py[cod]
@@ -36,18 +35,14 @@ models/*
 # Backup files
 *.backup.py
 *.bak
+etiku_app.backup.py
 etiku_app.before_*.py
 etiku_app.v2_*.py
 etiku_app_v2_*.py
 README.backup.md
 assets/style.backup.css
+*.v2_backup.css
+*.v2_1_backup.py
 
 # Local sample documents
 sample.pdf
-
-@"
-
-# Additional development backups
-*.v2_backup.css
-*.v2_1_backup.py
-"@ | Add-Content .gitignore
