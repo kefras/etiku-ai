@@ -1,0 +1,53 @@
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+.venv-1/
+venv/
+
+# API keys and secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+*.pem
+*.key
+
+# Local databases and chat history
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+local_data/
+
+# Generated models
+models/*
+!models/.gitkeep
+
+# Archives
+*.zip
+
+# Backup files
+*.backup.py
+*.bak
+etiku_app.before_*.py
+etiku_app.v2_*.py
+etiku_app_v2_*.py
+README.backup.md
+assets/style.backup.css
+
+# Local sample documents
+sample.pdf
+
+@"
+
+# Additional development backups
+*.v2_backup.css
+*.v2_1_backup.py
+"@ | Add-Content .gitignore

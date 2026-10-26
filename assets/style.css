@@ -1,0 +1,43 @@
+:root { --etiku-navy:#102A43; --etiku-teal:#00D4B4; }
+.stApp { background: #0B1220; color: #EDF4F8; }
+[data-testid="stSidebar"] { background: #101D2F; border-right: 1px solid #20344D; }
+[data-testid="stSidebar"] h1 { color: #F5FAFD; letter-spacing: -.04em; }
+[data-testid="stSidebar"] .stButton button { border-radius: 12px; border: 1px solid #34465D; }
+.stButton button[kind="primary"] { background: #00BFA5; color: #071722; border: none; font-weight: 700; }
+[data-testid="stChatMessage"] { background: #131F31; border: 1px solid #253750; border-radius: 16px; padding: 1rem; }
+[data-testid="stChatInput"] { border-radius: 16px; }
+.etiku-hero { padding: 2.2rem 0 1rem; text-align: center; }
+.etiku-mark { display: inline-block; background: linear-gradient(135deg,#00D4B4,#73A7FF); color:#071722; padding:.55rem .9rem; border-radius:16px; font-weight:900; letter-spacing:.12em; }
+.etiku-hero h1 { margin:.8rem 0 .25rem; font-size:2.4rem; }
+.etiku-hero p { color:#9CB1C7; }
+
+
+/* ETIKU AI v2.2 — Compact ChatGPT-style history */
+
+section[data-testid="stSidebar"] div[data-testid="stButton"] button {
+    border-radius: 9px;
+    text-align: left;
+    justify-content: flex-start;
+    font-size: 0.88rem;
+    min-height: 36px;
+    padding: 7px 10px;
+    transition: background-color 0.2s ease;
+}
+
+section[data-testid="stSidebar"] div[data-testid="stButton"] button p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+}
+
+section[data-testid="stSidebar"] div[data-testid="stButton"] button:hover {
+    background-color: #243449;
+}
+
+section[data-testid="stSidebar"] div[data-testid="stPopover"] button {
+    min-width: 36px;
+    padding: 5px;
+    border-radius: 8px;
+}
