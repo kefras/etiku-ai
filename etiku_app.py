@@ -1,5 +1,5 @@
 
-"""ETIKU AI v2.3 â€” Gemini chatbot with ChatGPT-style history."""
+"""ETIKU AI v2.4 - Gemini chatbot with session-isolated chat history."""
 
 import os
 from collections import OrderedDict
@@ -22,16 +22,16 @@ from src.etiku_ai.session_storage import (
 )
 
 
-# ==================================================
+# --------------------------------------------------
 # APPLICATION CONFIGURATION
-# ==================================================
+# --------------------------------------------------
 
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / ".env")
 
 st.set_page_config(
     page_title="ETIKU AI | Intelligence. Knowledge. Action.",
-    page_icon="ðŸ§ ",
+    page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -50,12 +50,12 @@ if "conversation_id" not in st.session_state:
     st.session_state.conversation_id = None
 
 
-# ==================================================
+# --------------------------------------------------
 # CONVERSATION DATE HELPERS
-# ==================================================
+# --------------------------------------------------
 
 def parse_chat_timestamp(value):
-    """Convert a stored timestamp into local datetime."""
+    """Convert stored timestamps to local datetime."""
 
     if value is None or value == "":
         return None
@@ -82,23 +82,23 @@ def parse_chat_timestamp(value):
 
 
 def group_conversations(chats):
-    """Organize conversations into date-based sections."""
+    """Organize conversations by date."""
 
-    today = date.today()
+    today = datetime.now().astimezone().date()
+
+    labels = (
+        "Today",
+        "Yesterday",
+        "Previous 7 Days",
+        "Previous 30 Days",
+        "Older",
+    )
 
     groups = OrderedDict(
-        (label, [])
-        for label in (
-            "Today",
-            "Yesterday",
-            "Previous 7 Days",
-            "Previous 30 Days",
-            "Older",
-        )
+        (label, []) for label in labels
     )
 
     for chat in chats:
-
         timestamp = parse_chat_timestamp(
             chat.get("updated_at") or chat.get("created_at")
         )
@@ -128,25 +128,37 @@ def group_conversations(chats):
     }
 
 
-# ==================================================
+def get_gemini_api_key():
+    """Read Gemini credentials locally or from Streamlit Cloud."""
+
+    api_key = os.getenv("GEMINI_API_KEY")
+
+    if api_key:
+        return api_key
+
+    try:
+        return st.secrets.get("GEMINI_API_KEY")
+    except (FileNotFoundError, KeyError):
+        return None
+
+
+# --------------------------------------------------
 # SIDEBAR
-# ==================================================
+# --------------------------------------------------
 
 with st.sidebar:
 
-    st.title("ðŸ§  ETIKU AI")
+    st.title("🧠 ETIKU AI")
     st.caption("Intelligence. Knowledge. Action.")
 
-    # Start a new conversation
     if st.button(
-        "âœï¸ New chat",
+        "New chat",
         use_container_width=True,
         type="primary",
     ):
         st.session_state.conversation_id = None
         st.rerun()
 
-    # Search conversation titles
     search_query = st.text_input(
         "Search chats",
         placeholder="Search conversations...",
@@ -155,11 +167,9 @@ with st.sidebar:
 
     st.divider()
 
-    # Conversation history
     if st.session_state.get("show_history", True):
 
         all_chats = list_conversations()
-
         query = search_query.strip().casefold()
 
         if query:
@@ -199,29 +209,19 @@ with st.sidebar:
                     gap="small",
                 )
 
-                # Open conversation
                 with col_chat:
-
                     if st.button(
                         title,
                         key=f"open_{chat_id}",
                         use_container_width=True,
-                        type=(
-                            "primary"
-                            if selected
-                            else "secondary"
-                        ),
+                        type="primary" if selected else "secondary",
                         help=title,
                     ):
-                        st.session_state.conversation_id = (
-                            chat["id"]
-                        )
+                        st.session_state.conversation_id = chat["id"]
                         st.rerun()
 
-                # Rename or delete conversation
                 with col_menu:
-
-                    with st.popover("â‹¯"):
+                    with st.popover("..."):
 
                         st.caption("Manage conversation")
 
@@ -244,7 +244,7 @@ with st.sidebar:
                                 st.rerun()
 
                         if st.button(
-                            "ðŸ—‘ï¸ Delete conversation",
+                            "Delete conversation",
                             key=f"delete_{chat_id}",
                             use_container_width=True,
                         ):
@@ -258,19 +258,22 @@ with st.sidebar:
     else:
         st.caption("Conversation history is hidden.")
 
-    # Render Settings only once
     st.divider()
+
+    # Render settings exactly once.
     render_settings()
 
     st.divider()
 
-    st.caption("ETIKU AI Â· Version 2.3")
-    st.caption("Your conversations are stored locally.")
+    st.caption("ETIKU AI | Version 2.4")
+    st.caption(
+        "Conversations are temporary and isolated by session."
+    )
 
 
-# ==================================================
+# --------------------------------------------------
 # MAIN CHAT INTERFACE
-# ==================================================
+# --------------------------------------------------
 
 conversation_id = st.session_state.conversation_id
 
@@ -280,9 +283,7 @@ messages = (
     else []
 )
 
-# Show welcome screen for new chats
 if not messages:
-
     st.markdown(
         """
         <div class="etiku-hero">
@@ -298,44 +299,32 @@ if not messages:
     )
 
 
-# ==================================================
+# --------------------------------------------------
 # DISPLAY SAVED MESSAGES
-# ==================================================
+# --------------------------------------------------
 
 for message in messages:
 
     role = message["role"]
+    avatar = "🧠" if role == "assistant" else "👤"
 
-    avatar = (
-        "ðŸ§ "
-        if role == "assistant"
-        else "ðŸ‘¤"
-    )
-
-    with st.chat_message(
-        role,
-        avatar=avatar,
-    ):
+    with st.chat_message(role, avatar=avatar):
         st.markdown(message["content"])
 
 
-# ==================================================
+# --------------------------------------------------
 # USER INPUT AND GEMINI RESPONSE
-# ==================================================
+# --------------------------------------------------
 
 prompt = st.chat_input("Message ETIKU AI...")
 
 if prompt:
 
-    # Create conversation on first message
     if not conversation_id:
-
         conversation_id = create_conversation()
         st.session_state.conversation_id = conversation_id
 
-    # Automatically name new conversations
     if not messages:
-
         conversation_title = (
             prompt.replace("\n", " ").strip()[:55]
         )
@@ -345,35 +334,24 @@ if prompt:
             conversation_title or "New conversation",
         )
 
-    # Save user message
     add_message(
         conversation_id,
         "user",
         prompt,
     )
 
-    # Display user message
-    with st.chat_message(
-        "user",
-        avatar="ðŸ‘¤",
-    ):
+    with st.chat_message("user", avatar="👤"):
         st.markdown(prompt)
 
+    with st.chat_message("assistant", avatar="🧠"):
 
-    # Generate Gemini response
-    with st.chat_message("assistant", avatar="ðŸ§ "):
-        api_key = os.getenv("GEMINI_API_KEY")
-
-        if not api_key:
-            try:
-                api_key = st.secrets.get("GEMINI_API_KEY")
-            except (FileNotFoundError, KeyError):
-                api_key = None
+        api_key = get_gemini_api_key()
 
         if not api_key:
             st.error(
                 "Missing GEMINI_API_KEY. "
-                "Add it to .env locally or Streamlit Cloud Secrets."
+                "Configure it in your .env file locally "
+                "or Streamlit Cloud Secrets."
             )
         else:
             try:
@@ -405,11 +383,14 @@ if prompt:
 
             except Exception as exc:
                 st.error(
-                    f"Unable to generate response: "
-                    f"{type(exc).__name__}"
+                    "Unable to generate a response "
+                    f"({type(exc).__name__}). "
+                    "Please try again."
                 )
+
                 print(
-                    f"ETIKU AI generation error: {exc}"
+                    "ETIKU AI generation error: "
+                    f"{type(exc).__name__}: {exc}"
                 )
 
     st.rerun()
