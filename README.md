@@ -1,150 +1,139 @@
-﻿# Digital Twin AI - Word2Vec, GloVe, RAG & Gemini PDF Chat
+﻿# 🧠 ETIKU AI
 
-**An end-to-end NLP and Generative AI project combining word embeddings, semantic retrieval, Retrieval-Augmented Generation (RAG), and conversational PDF question answering.**
+### Intelligence. Knowledge. Action.
 
-[**Live Application**](https://digitaltwin1.streamlit.app/) | [**GitHub Repository**](https://github.com/kefras/digital-twin-word2vec-glove-embeddings)
+**ETIKU AI** is an intelligent, conversational AI assistant built with Python, Streamlit, and Google's Gemini models. It provides a modern, interactive environment for learning, research, coding, creative thinking, and everyday problem-solving.
 
-## Project Overview
+The project is developed by **Kefas Etiku Francis** and named in honor of the founder's grandfather.
 
-Digital Twin AI demonstrates how natural language processing techniques can evolve from traditional word embeddings into practical AI-powered knowledge retrieval systems.
+## Overview
 
-The project integrates **Word2Vec, a custom GloVe implementation, semantic search, RAG, Streamlit, and Google Gemini** into an interactive application.
+ETIKU AI combines the conversational capabilities of Google's Gemini models with a custom-designed Streamlit interface to deliver a responsive, user-friendly AI experience.
 
-Users can explore knowledge-base question answering, upload PDF documents, ask contextual questions, and continue conversations using follow-up questions.
+The application features a midnight-navy interface, teal accents, organized chat history, configurable AI responses, and real-time response streaming.
 
-## Key Features
+## Features
 
-- **Word2Vec Embeddings:** Explore distributed word representations and semantic relationships.
-- **Custom GloVe Implementation:** Learn global word co-occurrence-based embedding techniques.
-- **Semantic Search:** Retrieve relevant text using vector embeddings and similarity matching.
-- **Retrieval-Augmented Generation:** Chunk documents, retrieve supporting passages, and generate grounded responses.
-- **Knowledge Base Q&A:** Ask questions against a predefined knowledge base, with fallback behavior for unsupported questions.
-- **Gemini-Powered PDF Chat:** Upload PDFs and ask natural-language questions about their contents.
-- **Conversational Context:** Ask follow-up questions that build on earlier interactions.
-- **Automated Testing:** Validate core application functionality using Python tests.
-- **Streamlit Deployment:** Access the application through a publicly deployed web interface.
-
-## System Architecture
-
-![Digital Twin AI System Architecture](diagrams/architecture1.png)
-
-```text
-                    DIGITAL TWIN AI
-                           |
-                   Streamlit Interface
-                           |
-              +------------+------------+
-              |                         |
-       Knowledge Base Q&A          PDF AI Chat
-              |                         |
-       Text Knowledge Base          PDF Upload
-              |                         |
-         Text Chunking             PDF Extraction
-              |                         |
-       Sentence Embeddings         Text Chunking
-              |                         |
-       Semantic Retrieval       Sentence Embeddings
-              |                         |
-       Grounded Q&A /             Semantic Retrieval
-         Abstention                    |
-              |                   Google Gemini
-              |                         |
-              +------------+------------+
-                           |
-                     User Response
-```
+- **AI-powered conversations:** Ask questions, explore ideas, generate content, and receive assistance with programming and technical topics.
+- **Streaming responses:** View AI-generated answers as they are produced.
+- **Conversation history:** Create, search, rename, and delete conversations.
+- **Date-grouped chats:** Organize conversations under Today, Yesterday, Previous 7 Days, Previous 30 Days, and Older.
+- **Response settings:** Adjust response style and creativity.
+- **Session isolation:** Keep each visitor's conversations separate in the public demo.
+- **Custom interface:** Responsive Streamlit design with ETIKU AI branding.
+- **Secure API configuration:** Supports environment variables and Streamlit Cloud Secrets.
 
 ## Technology Stack
 
-| Category | Technologies |
+| Technology | Purpose |
 |---|---|
-| Programming | Python |
-| NLP | Word2Vec, GloVe |
-| Embeddings | Sentence Transformers |
-| Retrieval | Vector similarity search |
-| AI Model | Google Gemini |
-| Document Processing | PDF text extraction |
-| Application | Streamlit |
-| Testing | Python automated tests |
-| Version Control | Git and GitHub |
-| Deployment | Streamlit Community Cloud |
+| Python | Application development |
+| Streamlit | Web application interface |
+| Google Gemini API | AI response generation |
+| Google Gen AI SDK | Gemini model integration |
+| Streamlit Session State | Temporary, session-specific chat storage |
+| SQLite | Local development conversation storage |
+| CSS | Custom user interface styling |
+| GitHub | Version control and source hosting |
 
-## Example Use Cases
+## Project Structure
 
-**Knowledge Base Q&A**
+```text
+ETIKU-AI/
+├── assets/
+│   └── style.css
+├── src/
+│   └── etiku_ai/
+│       ├── assistant.py
+│       ├── config.py
+│       ├── session_storage.py
+│       └── settings.py
+├── etiku_app.py
+├── requirements.txt
+├── .gitignore
+├── LICENSE
+└── README.md
+```
 
-Question: What does Kubernetes do?
+## Run Locally
 
-Answer: Kubernetes automates container deployment and scaling.
+**1. Clone the repository**
 
-**Conversational PDF Chat**
+```bash
+git clone https://github.com/kefras/etiku-ai.git
+cd etiku-ai
+```
 
-Question: How does Kubernetes compare with Docker?
+**2. Create a virtual environment**
 
-Answer: Docker packages applications into portable containers, while Kubernetes manages container deployment and scaling.
+```bash
+python -m venv .venv
+```
 
-These examples illustrate how retrieval and conversational context support document-grounded question answering.
+Activate it on Windows:
 
-## Live Application
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
 
-Try the deployed application:
+**3. Install dependencies**
 
-**https://digitaltwin1.streamlit.app/**
+```bash
+pip install -r requirements.txt
+```
 
-The application supports both knowledge-base question answering and Gemini-powered PDF conversations.
+**4. Configure your Gemini API key**
 
-## Testing and Validation
+Create a `.env` file in the project root:
 
-The project has previously passed **21 automated tests** covering its core functionality. The repository also includes a GitHub Actions CI workflow.
+```env
+GEMINI_API_KEY=your_gemini_api_key
+```
 
-## Project Limitations
+Never commit your real API key to GitHub.
 
-- Answers depend on the quality and relevance of retrieved text.
-- PDF text extraction may be less reliable for scanned or image-only documents.
-- Gemini API availability and quotas can affect PDF chat responses.
-- The application is intended as an educational and portfolio demonstration rather than a production-grade enterprise knowledge system.
+**5. Start ETIKU AI**
 
-## Future Improvements
+```bash
+streamlit run etiku_app.py
+```
 
-- Persistent vector database integration.
-- Support for multiple uploaded documents.
-- Retrieval quality evaluation and benchmarking.
-- Improved source citations and document references.
-- Containerized deployment using Docker.
-- Cloud infrastructure deployment and CI/CD enhancements.
+Open the local URL displayed in your terminal.
 
-## Project Background
+## Deployment
 
-Originally developed for a Week 2 AI School embeddings challenge, this project demonstrates a progression from traditional word embeddings to practical semantic retrieval and AI-assisted document question answering.
+ETIKU AI is designed for deployment using Streamlit Community Cloud.
 
-It serves as a hands-on learning project in machine learning, natural language processing, Retrieval-Augmented Generation, generative AI integration, and cloud application deployment.
+The application uses Streamlit Secrets to securely load the Gemini API key in the hosted environment.
 
-## Live Demo
+The public-demo version stores conversations in individual Streamlit sessions. Conversation history is temporary and may be lost when a session ends or the application restarts.
 
-Try the deployed Digital Twin AI Assistant:
+## Roadmap
 
-**[Launch Digital Twin AI](https://digitaltwin1.streamlit.app/)**
+- User registration and authentication
+- Secure cloud database for persistent conversations
+- Document upload and conversational PDF analysis
+- Retrieval-Augmented Generation (RAG)
+- Voice interaction
+- Expanded AI model integrations
+- Improved mobile experience
+- Usage monitoring and reliability improvements
 
-The application includes a knowledge-base question-answering interface and an AI-powered PDF chat system using semantic retrieval and Google Gemini.
+## Developer
 
-## Application Screenshots
+**Kefas Etiku Francis**
 
-### Knowledge Base Question Answering
+Computer Science Student | Cloud & DevOps Enthusiast | AI Developer
 
-![Knowledge Base Q&A](screenshots/knowledge-base/qa-demo-final.png)
-
-### PDF AI Chat
-
-Upload a PDF document and ask questions about its contents.
-
-![PDF AI Chat](screenshots/pdf-chat/pdf-upload.png)
-
-### Automated Testing
-
-The project successfully passed 21 automated unit tests.
-
-![21 Tests Passed](screenshots/tests/21-tests-passed.png)
+- **Portfolio:** https://kefas.live
+- **GitHub:** https://github.com/kefras
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
+This project is distributed under the terms of the MIT License. See `LICENSE` for details.
+
+---
+
+**ETIKU AI — Intelligence. Knowledge. Action.**
+
+*Built to make knowledge and intelligent assistance more accessible.*
